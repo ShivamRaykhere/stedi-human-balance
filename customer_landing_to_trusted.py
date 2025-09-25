@@ -1,4 +1,4 @@
-import sys
+ import sys
 from awsglue.transforms import *
 from awsglue.utils import getResolvedOptions
 from pyspark.context import SparkContext
@@ -27,15 +27,14 @@ DEFAULT_DATA_QUALITY_RULESET = """
 """
 
 # Script generated for node customer landing
-customerlanding_node1758776026454 = glueContext.create_dynamic_frame.from_catalog(database="stedi", table_name="customer_landing", transformation_ctx="customerlanding_node1758776026454")
+customerlanding_node1758787014936 = glueContext.create_dynamic_frame.from_options(format_options={"multiLine": "false"}, connection_type="s3", format="json", connection_options={"paths": ["s3://mybucketstedi/customer/landing/"], "recurse": True}, transformation_ctx="customerlanding_node1758787014936")
 
 # Script generated for node SQL Query
 SqlQuery0 = '''
 select * from customer_landing
 where shareWithResearchasOfDate IS NOT NULL;
-
 '''
-SQLQuery_node1758776059235 = sparkSqlQuery(glueContext, query = SqlQuery0, mapping = {"customer_landing":customerlanding_node1758776026454}, transformation_ctx = "SQLQuery_node1758776059235")
+SQLQuery_node1758776059235 = sparkSqlQuery(glueContext, query = SqlQuery0, mapping = {"customer_landing":customerlanding_node1758787014936}, transformation_ctx = "SQLQuery_node1758776059235")
 
 # Script generated for node customer trusted
 EvaluateDataQuality().process_rows(frame=SQLQuery_node1758776059235, ruleset=DEFAULT_DATA_QUALITY_RULESET, publishing_options={"dataQualityEvaluationContext": "EvaluateDataQuality_node1758776013983", "enableDataQualityResultsPublishing": True}, additional_options={"dataQualityResultsPublishing.strategy": "BEST_EFFORT", "observations.scope": "ALL"})
