@@ -1,4 +1,4 @@
-import sys
+ import sys
 from awsglue.transforms import *
 from awsglue.utils import getResolvedOptions
 from pyspark.context import SparkContext
@@ -27,10 +27,10 @@ DEFAULT_DATA_QUALITY_RULESET = """
 """
 
 # Script generated for node accelerometer landing
-accelerometerlanding_node1758776687587 = glueContext.create_dynamic_frame.from_catalog(database="stedi", table_name="accelerometer_landing", transformation_ctx="accelerometerlanding_node1758776687587")
+accelerometerlanding_node1758787481163 = glueContext.create_dynamic_frame.from_options(format_options={"multiLine": "false"}, connection_type="s3", format="json", connection_options={"paths": ["s3://mybucketstedi/accelerometer/landing/"], "recurse": True}, transformation_ctx="accelerometerlanding_node1758787481163")
 
 # Script generated for node customer trusted
-customertrusted_node1758776688530 = glueContext.create_dynamic_frame.from_catalog(database="stedi", table_name="customer_trusted", transformation_ctx="customertrusted_node1758776688530")
+customertrusted_node1758787484001 = glueContext.create_dynamic_frame.from_options(format_options={"multiLine": "false"}, connection_type="s3", format="json", connection_options={"paths": ["s3://mybucketstedi/customer/trusted/"], "recurse": True}, transformation_ctx="customertrusted_node1758787484001")
 
 # Script generated for node SQL Query
 SqlQuery0 = '''
@@ -38,9 +38,8 @@ select DISTINCT accelerometer_landing.*
 FROM accelerometer_landing
 INNER JOIN customer_trusted
 ON accelerometer_landing.user = customer_trusted.email;
-
 '''
-SQLQuery_node1758776757138 = sparkSqlQuery(glueContext, query = SqlQuery0, mapping = {"accelerometer_landing":accelerometerlanding_node1758776687587, "customer_trusted":customertrusted_node1758776688530}, transformation_ctx = "SQLQuery_node1758776757138")
+SQLQuery_node1758776757138 = sparkSqlQuery(glueContext, query = SqlQuery0, mapping = {"accelerometer_landing":accelerometerlanding_node1758787481163, "customer_trusted":customertrusted_node1758787484001}, transformation_ctx = "SQLQuery_node1758776757138")
 
 # Script generated for node accelerometer trusted
 EvaluateDataQuality().process_rows(frame=SQLQuery_node1758776757138, ruleset=DEFAULT_DATA_QUALITY_RULESET, publishing_options={"dataQualityEvaluationContext": "EvaluateDataQuality_node1758776675325", "enableDataQualityResultsPublishing": True}, additional_options={"dataQualityResultsPublishing.strategy": "BEST_EFFORT", "observations.scope": "ALL"})
