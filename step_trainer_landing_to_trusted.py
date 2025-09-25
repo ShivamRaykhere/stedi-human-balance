@@ -26,11 +26,11 @@ DEFAULT_DATA_QUALITY_RULESET = """
     ]
 """
 
-# Script generated for node step trainer landing
-steptrainerlanding_node1758777779569 = glueContext.create_dynamic_frame.from_catalog(database="stedi", table_name="step_trainer_landing", transformation_ctx="steptrainerlanding_node1758777779569")
+# Script generated for node step_trainer_landing
+step_trainer_landing_node1758787856379 = glueContext.create_dynamic_frame.from_options(format_options={"multiLine": "false"}, connection_type="s3", format="json", connection_options={"paths": ["s3://mybucketstedi/step_trainer/landing/"], "recurse": True}, transformation_ctx="step_trainer_landing_node1758787856379")
 
 # Script generated for node customer curated
-customercurated_node1758777781387 = glueContext.create_dynamic_frame.from_catalog(database="stedi", table_name="customer_curated", transformation_ctx="customercurated_node1758777781387")
+customercurated_node1758787858428 = glueContext.create_dynamic_frame.from_options(format_options={"multiLine": "false"}, connection_type="s3", format="json", connection_options={"paths": ["s3://mybucketstedi/customer/curated/"], "recurse": True}, transformation_ctx="customercurated_node1758787858428")
 
 # Script generated for node SQL Query
 SqlQuery0 = '''
@@ -38,10 +38,8 @@ select step_trainer_landing.*
 from step_trainer_landing
 INNER JOIN customer_curated
 ON customer_curated.serialNumber = step_trainer_landing.serialNumber;
-
-
 '''
-SQLQuery_node1758777836214 = sparkSqlQuery(glueContext, query = SqlQuery0, mapping = {"step_trainer_landing":steptrainerlanding_node1758777779569, "customer_curated":customercurated_node1758777781387}, transformation_ctx = "SQLQuery_node1758777836214")
+SQLQuery_node1758777836214 = sparkSqlQuery(glueContext, query = SqlQuery0, mapping = {"step_trainer_landing":step_trainer_landing_node1758787856379, "customer_curated":customercurated_node1758787858428}, transformation_ctx = "SQLQuery_node1758777836214")
 
 # Script generated for node step trainer trusted
 EvaluateDataQuality().process_rows(frame=SQLQuery_node1758777836214, ruleset=DEFAULT_DATA_QUALITY_RULESET, publishing_options={"dataQualityEvaluationContext": "EvaluateDataQuality_node1758777761265", "enableDataQualityResultsPublishing": True}, additional_options={"dataQualityResultsPublishing.strategy": "BEST_EFFORT", "observations.scope": "ALL"})
